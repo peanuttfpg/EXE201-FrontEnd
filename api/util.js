@@ -1,6 +1,17 @@
 import axios from "axios";
+import { getAuth } from 'firebase/auth';
+import firebaseConfig from "../firebaseConfig";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { getAuthToken } from "./firebase";
 
+firebase.initializeApp(firebaseConfig);
 // ----------------------------------------------------------------------
+var apiHeaders = {
+  'Authorization': 'Bearer '
+};
+const auth = getAuth();
+const user = auth.currentUser;
 
 const parseParams = (params) => {
   const keys = Object.keys(params);
@@ -30,12 +41,38 @@ const parseParams = (params) => {
 const request = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   paramsSerializer: parseParams,
+  headers: apiHeaders
 });
 
 const gzpRequest = axios.create({
   baseURL: process.env.NEXT_PUBLIC_TESTGZP_URL,
   paramsSerializer: parseParams,
+  headers: apiHeaders
 });
+
+
+
+if (user) {
+  user.getIdToken()
+    .then((result) => {
+            //
+            //
+            console.log(result);
+            getAuthToken(result).then((res) => {
+              apiHeaders.Authorization += res.accessToken;
+              console.log("New Headers :",apiHeaders.Authorization);
+              request.defaults.headers.Authorization = apiHeaders.Authorization;
+              console.log("REQUEST HEADERS :",request.defaults.headers);
+              gzpRequest.defaults.headers.Authorization = apiHeaders.Authorization;
+              }
+            );
+            
+            
+      }
+    )
+    
+  
+};
 
 request.interceptors.response.use(
   (response) => response,

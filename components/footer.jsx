@@ -15,6 +15,7 @@ import {
   useColorModeValue,
   Image,
   Icon,
+  Flex,
 } from "@chakra-ui/react";
 import logo from "../public/assets/images/logo.png";
 
@@ -32,15 +33,15 @@ const FootLink = () => {
         <NextLink
           key={link.name}
           color={"primary.main"}
-          fontSize="1.3rem"
+          fontSize="1rem"
           _hover={{
             textDecoration: "none",
             color: "primary.main",
             fontWeight: "bold",
           }}
           _focus={{ boxShadow: "none" }}
-          width="8rem"
-          pl={{ xs: "1rem", lg: 0 }}
+          width="5rem"
+          pl={{ xs: "0.5rem", lg: 0 }}
           href={link.href}
         >
           {link.name}
@@ -52,17 +53,30 @@ const FootLink = () => {
 export default function MainFooter() {
     return (
       <Box
-        bg={"primary.dark"}
+        position="fixed"
+        bottom={0}
+        left={0}
+        right={0}
+        minHeight="7.5vh"
+        zIndex={"99"}
+        display="flex"
+        
+        bg={"background_light"}
         color={useColorModeValue("primary.main.700", "primary.main.200")}
       >
-        <Container as={Stack} maxW={"6xl"} py={10}>
+        <Box position="relative" 
+        bottom={0}
+        left={0}
+        right={0} display="flex" maxW={"6xl"} py={-4}
+        alignItems="center"
+        justifyContent="center">
           <SimpleGrid
             templateColumns={{
               md: "2fr 2fr 2fr 0fr",
             }}
             spacing={"2rem"}
           >
-            <Stack>
+            <Stack direction="row">
               <Box display={{ xs: "flex", md: "block" }} alignItems="center">
                 <Logo />
                 <Heading
@@ -75,7 +89,7 @@ export default function MainFooter() {
                     lg: "2rem",
                   }}
                 >
-                  GenZ Pets <br />
+                  GenZ Pets 
                 </Heading>
               </Box>
             </Stack>
@@ -85,6 +99,7 @@ export default function MainFooter() {
               justifyContent="center"
               mt={{ md: "3rem" }}
               display={{ xs: "none", md: "flex" }}
+              direction="row"
             >
               <FootLink />
             </Stack>
@@ -96,8 +111,9 @@ export default function MainFooter() {
             >
               <Box
                 fontWeight={"500"}
-                fontSize={{ xs: "1rem", md: "1.3rem" }}
-                mb={2}
+                fontSize={{ xs: "0.5rem", md: "0.65rem" }}
+                ml={500}
+                mb={10}
               >
                 <Text> Mạng xã hội :</Text>
                 <Link
@@ -145,7 +161,7 @@ export default function MainFooter() {
               </SimpleGrid>
             </Box>
           </SimpleGrid>
-        </Container>
+        </Box>
       </Box>
     );
 }
