@@ -10,9 +10,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
-    NEXT_PUBLIC_BASE_URL: "https://stg-api-blogpost.reso.vn/api",
-    NEXT_PUBLIC_BEANOI_URL: "https://api.beanoi.com/api",
-    NEXT_PUBLIC_TESTGZP_URL: "https://stg-api.beanoi.com/api",
+    NEXT_PUBLIC_BASE_URL: "http://18.143.102.131:8080",
+    // NEXT_PUBLIC_BEANOI_URL: "https://api.beanoi.com/api",
+    NEXT_PUBLIC_TESTGZP_URL: "http://18.143.102.131:8080",
   },
   trailingSlash: true,
 }

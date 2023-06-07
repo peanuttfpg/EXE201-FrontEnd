@@ -28,8 +28,11 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.9.0",
-    "react-slick": "^0.29.0",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "react-query": "^3.39.3",
+    "react-slick": "^0.29.0"
   }
 }

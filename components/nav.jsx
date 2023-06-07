@@ -32,7 +32,7 @@ import 'firebase/compat/auth';
 
 //icons & images
 import { BsHeadphones } from "react-icons/bs";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
 import logo from "../public/assets/images/logo.png";
 import whiteLogo from "../public/assets/images/logo.png";
 
@@ -153,6 +153,7 @@ const PopUpButton = () =>{
                 </>
                   :
                     <Button
+                    leftIcon={<FaGoogle/>}
                     onClick={handleSignIn}
                     fontFamily="Inter"
                     fontStyle="normal"
@@ -204,6 +205,7 @@ const NavLink = () => {
         _focus={{ boxShadow: "none" }}
         width="8rem"
         pl={{ xs: "1rem", lg: 0 }}
+        href={link.href}
       >
         {link.name}
       </Link>
@@ -326,9 +328,9 @@ export default function Action(props) {
                   pl="8rem"
                   onClick={() => router.push("/")}
               />
-            
-            <PopUpButton/>
-              
+            <div style ={{ visibility: props.isLogin ? "hidden" : "visible" }}>
+              <PopUpButton />
+            </div>
             </Box>
           </Stack>
           <Spacer />
