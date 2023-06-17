@@ -16,7 +16,6 @@ const BlogList = () => {
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <Box bg="primary.lighter">
-          <Action hasBanner={true} isBlog={true} isLogin={false}/>
           <BlogListView />
           <Divider />
           <BlogFooter />

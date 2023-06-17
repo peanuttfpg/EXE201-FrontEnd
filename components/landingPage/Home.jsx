@@ -10,22 +10,28 @@ import {
     Flex,
   } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+
+import 'firebase/compat/auth';
+
 import Action from "../nav";
 import { MdTrendingFlat } from "react-icons/md";
 import dogBG from "../../public/assets/images/dogbackground.png"
+import banner from "../../public/assets/images/homeBackground2.png"
+
 
   
 export default function SplitWithImage() {
     const router = useRouter();
     return (
       <Box background={"background_main"} height={"100vh"}>
-        <Action />
+        
         <Flex
           direction={{ base: "column", sm: "column", md: "row" }}
           pl={{ md: "10%" }}
           mt={{ md: "2rem" }}
         >
           <Box  ml={"1rem"} mt="1rem">
+            {/* dog background */}
             <Box >
               <Heading
                 
@@ -64,22 +70,27 @@ export default function SplitWithImage() {
                   />
               
             </Box>
+            {/* web description */}
             <Box background="background_light" my="250px" borderRadius={"50px"}>
-            <Heading>
-              <Text 
-                bgColor={"background_light"} 
-                align="center"
-                color="text"
-                fontSize="2.5rem">
-                GenZ PET
+              <Heading>
+                <Text 
+                  bgColor={"background_light"} 
+                  align="center"
+                  color="text"
+                  fontSize="2.5rem">
+                  GenZ PET
+                </Text>
+              </Heading>
+              <Text align="center">
+              GenZ Pet là một diễn đàn chủ yếu về thú cưng, nơi chia sẻ, giải đáp và giải trí các vấn đề liên quan đến động vật. <br/>
+              Ngoài ra, đây cũng là một thị trường trao đổi mua bán thú cưng và các vật phẩm liên quan. Đặc biệt, chúng mình cung cấp <br/>
+              dịch vụ như phòng khám chữa bệnh, chăm sóc sắc đẹp và chăm sóc hộ dành cho thú cưng.
               </Text>
-            </Heading>
-            <Text align="center">
-            GenZ Pet là một diễn đàn chủ yếu về thú cưng, nơi chia sẻ, giải đáp và giải trí các vấn đề liên quan đến động vật. <br/>
-            Ngoài ra, đây cũng là một thị trường trao đổi mua bán thú cưng và các vật phẩm liên quan. Đặc biệt, chúng mình cung cấp <br/>
-            dịch vụ như phòng khám chữa bệnh, chăm sóc sắc đẹp và chăm sóc hộ dành cho thú cưng.
-            </Text>
-          </Box>
+            </Box>
+            {/* banner background */}
+            <Box>
+              
+            </Box>
           </Box>
           <Spacer pt={"2rem"} />
           <Spacer display={{ md: "none" }} pt={"7rem"} />

@@ -16,7 +16,7 @@ export const BlogViewsDate = (props) => {
   
     return (
       <HStack
-        marginTop="2"
+        marginTop="1"
         spacing={"0.5rem"}
         display="flex"
         alignItems="center"
@@ -26,7 +26,7 @@ export const BlogViewsDate = (props) => {
         py={{ sm: "0.5rem", lg: 0 }}
         opacity="0.8"
       >
-        <Flex alignItems="center" minW={"1rem"}>
+        <Flex alignItems="center" minW={"5rem"}>
           <CircleIcon boxSize={{ xs: 1, md: 2, lg: 3 }} />
           <Text fontWeight="medium" px={2}>
             {props.viewnums}

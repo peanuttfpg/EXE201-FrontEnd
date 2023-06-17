@@ -4,7 +4,6 @@ import { Box, Heading, Container, Flex } from "@chakra-ui/react";
 
 import { BsFillHeartFill } from "react-icons/bs";
 //others
-import CarouselBasic from "../carousel/CarouselBasic";
 
 const BlogFooter = () => {
   return (
@@ -34,7 +33,6 @@ const BlogFooter = () => {
           </Heading>
         </Flex>
 
-        <CarouselBasic />
       </Container>
     </Box>
   );
