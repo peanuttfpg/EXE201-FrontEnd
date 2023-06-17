@@ -1,19 +1,24 @@
 import MainFooter from "../components/footer";
-import Home from "../components/landingPage/Home.jsx";
+import SplitWithImage from "../components/landingPage/Home";
 import { Box,
          ChakraProvider
 } from "@chakra-ui/react";
 import theme from "../theme/theme.jsx";
+import AuthCheck from "../components/authentication/AuthCheck";
+import Action from "../components/nav";
 
-function HomePage(){
+function Home(){
     return(
         <ChakraProvider theme={theme}>
             <Box>
-                <Home />
-                <MainFooter/>
+                <AuthCheck>
+                    <Action/>
+                    <SplitWithImage />
+                    <MainFooter/>
+                </AuthCheck>
             </Box>
         </ChakraProvider>
     )
 }
 
-export default HomePage;
+export default Home;

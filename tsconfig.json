@@ -35,7 +35,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
-  ],
+, "api/blog.ts"  ],
   "exclude": [
     "node_modules"
   ]

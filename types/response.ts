@@ -15,3 +15,9 @@ export type BaseReponse<T> = {
     };
   };
   
+  export type PostResponse<T> = {
+    data: T;
+    code: number;
+    message: string;
+  };
+  

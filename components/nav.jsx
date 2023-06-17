@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import NextLink from "next/link";
+import Cookies from "js-cookie";
+import useAuthContext from "../hooks/useAuthContext";
+import useUserContext from "../hooks/useUserContext";
+import { AuthContextProvider } from "../contexts/AuthContext";
 //chakra ui
 import { CloseIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import {
@@ -23,12 +26,12 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalCloseButton
+  ModalCloseButton,
+  useToast
 } from "@chakra-ui/react";
 
-import firebaseConfig from "../firebaseConfig";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+//firebase
+import Firebase from "../firebase/firebase";
 
 //icons & images
 import { BsHeadphones } from "react-icons/bs";
@@ -47,28 +50,21 @@ const Links = [
   { name: "Blog", href: "/blog" },
 ];
 
-firebase.initializeApp(firebaseConfig);
-
 const SignOutButton = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        user.getIdToken().then((token) => {
-          console.log(token); // JWT token
-        });
-      }
+    const unsubscribe = Firebase.auth().onAuthStateChanged((user) => {
       setIsSignedIn(!!user); // Update the sign-in state
     });
-
+    
     return () => {
       unsubscribe();
     };
   }, []);
 
   const handleSignOut = () => {
-    firebase.auth().signOut()
+    Firebase.auth().signOut()
       .then(() => {
         console.log('Sign-out successful');
       })
@@ -86,7 +82,8 @@ const SignOutButton = () => {
         fontWeight="1000"
         fontSize="1.4rem"
         align="center"
-        pl="8rem">
+        pl="1.5rem"
+        ml="8rem">
             Sign Out
         </Button> 
       ) : (
@@ -96,79 +93,6 @@ const SignOutButton = () => {
   );
 };
 
-const handleSignIn = () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider)
-    .then((result) => {
-      // Successful sign-in, handle the user data or perform any necessary actions
-      const user = result.user;
-      console.log(user);
-    })
-    .catch((error) => {
-      // Handle sign-in errors
-      console.log(error);
-    });
-};
-
-const PopUpButton = () =>{
-  const user = firebase.auth().currentUser;
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-  return (
-      
-        <>
-        <Avatar
-        size="md"
-        ml="400px"
-        src={user ? user.photoURL : ""} // Replace with the actual URL of the user's image
-        onClick={handleClick}
-      />
-
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Avatar 
-            size="xl"
-            align="center"
-            src={user ? user.photoURL : ""}/>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {user ? 
-                <>
-                  <Text align="center">
-                    {user.displayName}
-                  </Text>
-
-                  <SignOutButton/>
-                </>
-                  :
-                    <Button
-                    leftIcon={<FaGoogle/>}
-                    onClick={handleSignIn}
-                    fontFamily="Inter"
-                    fontStyle="normal"
-                    fontWeight="1000"
-                    fontSize="1.4rem"
-                    align="center"
-                    pl="8rem">
-                        Sign In
-                    </Button> 
-            }
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      </>);
-}
 const NavLink = () => {
   const router = useRouter();
   const pathname = router.pathname;
@@ -232,6 +156,7 @@ const navVariants = {
   },
 };
 
+//#region dates
 let currentDate = new Date();
 let currentMonth = currentDate.getMonth() + 1;
 const currentTime =
@@ -250,15 +175,30 @@ const weekday = [
   "Thứ Bảy",
 ];
 
+
 let dayName = weekday[currentDate.getDay()];
+//#endregion
 
 const Logo = () => <Image alt={"logo"} src={logo.src} width="58px" height="62px"/>;
 const WhiteLogo = () => <Image alt={"whiteLogo"} src={whiteLogo.src} width="58px" height="82px"/>;
 
 export default function Action(props) {
+  const { user, loading } = useAuthContext();
+  const toast = useToast();
+  const { accessToken, user: currentUser } = useUserContext();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Box
@@ -329,7 +269,58 @@ export default function Action(props) {
                   onClick={() => router.push("/")}
               />
             <div style ={{ visibility: props.isLogin ? "hidden" : "visible" }}>
-              <PopUpButton />
+              
+            <>
+            <Avatar
+            size="md"
+            ml="400px"
+            src={user ? user.photoURL : ""} // Replace with the actual URL of the user's image
+            onClick={handleClick}
+          />
+
+          {/* Pop Up Button   */}
+
+          <Modal isOpen={isOpen} onClose={handleClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                <Avatar 
+                size="2xl"
+                align="center"
+                ml="8rem"
+                src={user ? user.photoURL : ""}/>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {user ? 
+                      <>
+                        <Text align="center" fontWeight={"bold"}>
+                          {user?.displayName}
+                          
+                        </Text>
+                        <Text align="center">
+                          {user?.email}
+                          </Text>
+                        <SignOutButton/>
+                      </>
+                      :
+                      <Button
+                      leftIcon={<FaGoogle/>}
+                      onClick={() => router.push("../authentication")}
+                      fontFamily="Inter"
+                      fontStyle="normal"
+                      fontWeight="1000"
+                      fontSize="1.4rem"
+                      align="center"
+                      pl="1.5rem"
+                      ml="8rem">
+                          Sign In
+                      </Button>
+                }
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+          </>
             </div>
             </Box>
           </Stack>

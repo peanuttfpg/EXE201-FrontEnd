@@ -10,7 +10,7 @@ import { request } from "./util";
 // };
 
 const checkout = (cartOrder: OrderRequest) => {
-  return request.post<PostResponse<OrderResponse>>(`/orders`, cartOrder);
+  return request().post<PostResponse<OrderResponse>>(`/orders`, cartOrder);
 };
 
 const cartApi = {
