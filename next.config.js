@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
     reactStrictMode: true,
     distDir: "build",
@@ -15,6 +16,12 @@ const nextConfig = {
     NEXT_PUBLIC_TESTGZP_URL: "http://18.143.102.131:8080",
   },
   trailingSlash: true,
+  exportPathMap: async function () {
+    return {
+      '/': { page: '/' },
+      // Add other pages/routes here
+    };
+  },
 }
 
 module.exports = nextConfig
