@@ -8,7 +8,7 @@ import theme from "../theme/theme";
 
 const MetaContent = () =>{
  return(
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>  
+  <meta http-equiv="Content-Security-Policy" content="default-src https:;"/>  
   );
 }
 
