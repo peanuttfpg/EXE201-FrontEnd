@@ -6,13 +6,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "../components/assets/css/font.css";
 import theme from "../theme/theme";
 
-const MetaContent = () =>{
- return(
-  <head>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>  
-  </head>
-  );
-}
 
 const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: any) {
@@ -22,7 +15,6 @@ function MyApp({ Component, pageProps }: any) {
       <UserContextProvider>
           <ChakraProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
-                <MetaContent/>
                 <Component {...pageProps} />
             </QueryClientProvider>
           </ChakraProvider>
