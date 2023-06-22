@@ -1,11 +1,18 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { AuthContextProvider } from "../contexts/AuthContext";
 import { UserContextProvider } from "../contexts/UserContext";
-import { useEffect } from "react";
+import { Children, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "../components/assets/css/font.css";
 import theme from "../theme/theme";
 
+const Meta = () => {
+  return (
+    <head>
+      <meta http-equiv="Content-Security-Policy" content="default-src http:;"/>
+    </head>
+  );
+}
 
 const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: any) {
@@ -13,6 +20,7 @@ function MyApp({ Component, pageProps }: any) {
     
     <AuthContextProvider>
       <UserContextProvider>
+        <Meta />
           <ChakraProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
                 <Component {...pageProps} />
