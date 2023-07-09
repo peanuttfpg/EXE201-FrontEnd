@@ -13,14 +13,18 @@ export type CartItem = {
 };
 
 export interface ProductItem {
-    master_product: number;
+    id: number;
     quantity: number;
     description: string;
   }
 
 export interface OrderRequest {
+    address: string;
     paymentMethod: number;
-    products_list: ProductItem[];
+    cartRequests: {
+      productId: number;
+      quantity: number;
+    }[];
 }
 
 export interface OrderResponse {
@@ -32,4 +36,10 @@ export interface OrderResponse {
   receive_bean: number;
   order_status: number;
   check_in_date: Date;
+}
+
+export interface CustomerInfo{
+  name: string;
+  phone: string;
+  email: string;
 }

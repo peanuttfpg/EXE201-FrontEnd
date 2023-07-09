@@ -2,7 +2,7 @@ import { request } from "./util";
 import { Blog } from "../types/blogs";
        
 
-export const getAllBlogs = ( accessToken: string,) : Promise<Blog[]> =>
+export const getAllBlogs = ( accessToken: string) : Promise<Blog[]> =>
     request.get('/blog/getAll', {
       headers: {
         authorization: "Bearer " + accessToken,

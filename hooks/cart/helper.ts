@@ -4,18 +4,28 @@ import {
     OrderRequest,
     ProductItem,
   } from "../../types/cart";
+  import { CustomerInfo } from "../../types/cart";
 
   export const mapCartModelToOrderRequest = (
-    cartModel: Cart
+    cartModel: Cart,
+    customerInfo?: CustomerInfo,
   ) => {
     let products_list: ProductItem[] = [];
     cartModel.items.forEach((cartItem) => {
       products_list.push(...mapCartItemToProduct(cartItem));
     });
+
+    let productOrder = {
+      order : products_list.map((product) => ({
+        productId: product.id,
+        quantity: product.quantity,
+      })),
+    } 
   
     const orderCart: OrderRequest = {
       paymentMethod: 1,
-      products_list,
+      cartRequests : productOrder.order,
+      address : customerInfo?.email!
     };
   
     return orderCart;
@@ -28,9 +38,9 @@ import {
     let products_list: ProductItem[] = [];
   
     let parentItem: ProductItem = {
-      master_product: cartItem.product.id,
+      id: cartItem.product.id,
       quantity: cartItem.quantity * parentQuantity,
-      description: "",
+      description: cartItem.description,
     };
     products_list.push(parentItem);
     return products_list;

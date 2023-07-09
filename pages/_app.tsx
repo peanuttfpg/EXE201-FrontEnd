@@ -5,6 +5,7 @@ import { Children, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "../components/assets/css/font.css";
 import theme from "../theme/theme";
+import { CartContextProvider } from "@/contexts/CartContext";
 
 const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: any) {
@@ -14,7 +15,9 @@ function MyApp({ Component, pageProps }: any) {
       <UserContextProvider>
           <ChakraProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
+              <CartContextProvider>
                 <Component {...pageProps} />
+              </CartContextProvider>
             </QueryClientProvider>
           </ChakraProvider>
       </UserContextProvider>

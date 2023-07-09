@@ -43,12 +43,14 @@ import { useRouter } from "next/router";
 //import Button0 from "./nav.style";
 import { Button0, IconButton0 } from "./nav.style";
 import CarouselNoArrow from "./carousel/CarouselNoArrow";
+import CartDrawer from "./cart/CartDrawer";
 
 const Links = [
   { name: "Trang chủ", href: "/" },
   { name: "Cửa Hàng", href: "/shop" },
   { name: "Blog", href: "/blog" },
 ];
+
 
 const SignOutButton = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -190,6 +192,8 @@ export default function Action(props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCartDisable, setIsCartDisable] = useState(false);
+  const [arrivedTimeRange, setArrivedTimeRange] = useState("");
 
   const handleClick = () => {
     setIsOpen(true);
@@ -269,7 +273,10 @@ export default function Action(props) {
                   onClick={() => router.push("/")}
               />
             <div style ={{ visibility: props.isLogin ? "hidden" : "visible" }}>
-              
+          <CartDrawer
+            isCartDisable={isCartDisable}
+            arrivedTimeRange={arrivedTimeRange}
+          />
             <>
             <Avatar
             size="md"
@@ -277,7 +284,7 @@ export default function Action(props) {
             src={user ? user.photoURL : ""} // Replace with the actual URL of the user's image
             onClick={handleClick}
           />
-
+          
           {/* Pop Up Button   */}
 
           <Modal isOpen={isOpen} onClose={handleClose}>
