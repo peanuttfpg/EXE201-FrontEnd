@@ -28,14 +28,10 @@ export interface OrderRequest {
 }
 
 export interface OrderResponse {
-  invoice_id: string;
-  order_id: number;
-  total_amount: number;
-  final_amount: number;
-  discount: number;
-  receive_bean: number;
-  order_status: number;
-  check_in_date: Date;
+  status: string;
+  message: string;
+  url: string;
+  method: string;
 }
 
 export interface CustomerInfo{

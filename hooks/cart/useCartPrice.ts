@@ -16,24 +16,19 @@ type CartPriceProps = {
 const prepareCart = async (cartPrepare: OrderRequest, accessToken: string) => {
   try {
     const res = await cartApi.prepareOrder(cartPrepare,accessToken);
-    return res.data.data;
+    return res.data;
   } catch (error) {
     throw new Error("Lỗi khi kiểm tra đơn hàng!");
   }
 };
 
-const useCartPrice = (cartRequest: OrderRequest | null,accessToken: string) => {
-  return useQuery(
-    ["orders/create", cartRequest ?? []],
-    () => {
-      return prepareCart(cartRequest!,accessToken);
-    },
-    {
-      enabled:
-        Boolean(cartRequest) && Boolean(cartRequest?.cartRequests?.length),
-      retry: 5,
-    }
-  );
+const useCartPrice = async (cartRequest: OrderRequest,accessToken: string) => {
+  try { 
+    const res = await cartApi.prepareOrder(cartRequest,accessToken);
+    return res;
+  } catch (error) {
+    console.log("ERROR FROM CODE : ",error);
+  }
 };
 
 export default useCartPrice;

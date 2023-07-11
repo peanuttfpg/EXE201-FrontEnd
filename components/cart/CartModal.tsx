@@ -49,7 +49,7 @@ export default function CartModal({
         motionPreset="slideInRight"
       >
         <ModalOverlay />
-        {step == 1 && (
+        {/* {step == 1 && (
           <CustomerFormContent
             setCustomerInfo={setCustomerInfo}
             setStep={setStep}
@@ -62,7 +62,7 @@ export default function CartModal({
             arrivedTimeRange={arrivedTimeRange}
             customer={customerInfo}
           />
-        )}
+        )} */}
       </Modal>
     </>
   );

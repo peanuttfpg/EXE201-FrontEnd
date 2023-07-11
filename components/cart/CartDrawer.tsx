@@ -21,7 +21,7 @@ import {
 import { FaShoppingBasket } from "react-icons/fa";
 import logoBean from "../../public/assets/images/logo.png";
 import useCartContext from "../../hooks/useCartContext";
-import { CartItem } from "../../types/cart";
+import { CartItem, OrderResponse } from "../../types/cart";
 import useDeleteCartItem from "../../hooks/cart/useDeleteCartItem";
 import useCartPrice from "../../hooks/cart/useCartPrice";
 import useUserContext from "@/hooks/useUserContext";
@@ -32,6 +32,7 @@ import beanEmpty from "../../public/assets/images/empty.png";
 import ProductInCart from "../sections/ProductInCart";
 import CartModal from "./CartModal";
 import { CustomerInfo } from "../../types/cart";
+import Link from "next/link";
 
 interface CartDrawerProps {
   arrivedTimeRange: string;
@@ -47,6 +48,16 @@ export default function CartDrawer({
   const currentCart = cartContext.cart;
   const [totalCartItems, setTotalCartItems] = useState<number>(0);
   const totalCurrentCart = currentCart?.items.length;
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [cartPrepareUrl, setCartPrepareUrl] = useState("");
+
+  useEffect(() => {
+    setTotalAmount(0);
+    currentCart?.items?.forEach((item) => {
+      setTotalAmount(totalAmount + item.product.price);
+    }
+    )
+  }, [currentCart]);
 
   const {authorize} = useAuthorize();
   const { user: FbUser, loading} = useAuthContext();
@@ -59,13 +70,24 @@ export default function CartDrawer({
         console.log("Authorized TOKEN :",res.data?.accessToken);
         setBearerToken(res.data?.accessToken);
       }
-      console.log(bearerToken);
     };
-  });
+    fetchData();
+    return () => {};
+  }, [accessToken]);
 
-  const { data: cartPrepareRes, error } = useCartPrice(
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await useCartPrice(
         mapCartModelToOrderRequest(currentCart),bearerToken
       );
+      console.log("Prepared Card :",res);
+      setCartPrepareUrl(res?.url);
+      console.log(cartPrepareUrl);
+    };
+  fetchData();
+  return () => {};
+}, [currentCart,bearerToken]);
+
 
   useEffect(() => {
     setTotalCartItems(totalCurrentCart);
@@ -96,14 +118,17 @@ export default function CartDrawer({
   };
 
   const handleClick = ()  => {
-    cartContext.onOpen;
+    cartContext.onOpen();
     isCartDisable = !isCartDisable;
-    console.log("Cart state changed : ", isCartDisable);
   };
 
   return (
     <Box>
-      <Box height={"3rem"} onClick={ handleClick }>
+      <Box 
+        height={"3rem"} 
+        onClick={ handleClick }
+        position={"absolute"}
+        right={"18rem"}>
         <IconButton
           disabled={isCartDisable}
           
@@ -186,7 +211,7 @@ export default function CartDrawer({
               justifyContent={"space-between"}
               padding="1rem"
             >
-              {cartPrepareRes ? (
+              {totalAmount>0 ? ( 
                 <>
                   <Flex
                     height={"auto"}
@@ -201,7 +226,7 @@ export default function CartDrawer({
                       <Flex justifyContent="space-between" fontSize={"xl"}>
                         <Text>{"Tạm tính:"}</Text>
                         <Text>
-                          {cartPrepareRes.total_amount.toLocaleString()} đ
+                          {totalAmount} VND
                         </Text>
                       </Flex>
                     </Box>
@@ -213,7 +238,7 @@ export default function CartDrawer({
                     >
                       <Text>{"Tổng cộng:"}</Text>
                       <Text>
-                        {cartPrepareRes?.final_amount.toLocaleString()} đ
+                        {totalAmount} VND
                       </Text>
                     </Flex>
                   </Flex>
@@ -221,12 +246,14 @@ export default function CartDrawer({
                   <Flex paddingTop="1rem">
                     <CartModal arrivedTimeRange={arrivedTimeRange}>
                       <Button
+                        as={Link}
+                        href={cartPrepareUrl}
                         height={"3rem"}
                         variant="outline"
                         color={"light"}
                         backgroundColor="primary.main"
                         colorScheme={"primary.main"}
-                        onClick={cartContext.onOpen}
+                        // onClick={cartContext.onOpen}
                         fontSize="2xl"
                         w="100%"
                       >
