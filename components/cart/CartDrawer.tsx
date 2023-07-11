@@ -76,7 +76,7 @@ export default function CartDrawer({
   }, [accessToken]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const FetchData = async () => {
       const res = await useCartPrice(
         mapCartModelToOrderRequest(currentCart),bearerToken
       );
@@ -84,7 +84,7 @@ export default function CartDrawer({
       setCartPrepareUrl(res?.url);
       console.log(cartPrepareUrl);
     };
-  fetchData();
+    FetchData();
   return () => {};
 }, [currentCart,bearerToken]);
 
