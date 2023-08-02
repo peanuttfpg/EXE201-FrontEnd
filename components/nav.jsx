@@ -49,6 +49,7 @@ const Links = [
   { name: "Trang chủ", href: "/" },
   { name: "Cửa Hàng", href: "/shop" },
   { name: "Blog", href: "/blog" },
+  { name: "Admin", href: "/admin" },
 ];
 
 

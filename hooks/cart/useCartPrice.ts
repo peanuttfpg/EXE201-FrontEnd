@@ -24,7 +24,9 @@ const prepareCart = async (cartPrepare: OrderRequest, accessToken: string) => {
 
 const useCartPrice = async (cartRequest: OrderRequest,accessToken: string) => {
   try { 
+    console.log("Order request: " + cartRequest);
     const res = await cartApi.prepareOrder(cartRequest,accessToken);
+    console.log("Returned result : " + res);
     return res;
   } catch (error) {
     console.log("ERROR FROM CODE : ",error);

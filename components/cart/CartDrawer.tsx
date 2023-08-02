@@ -32,7 +32,7 @@ import beanEmpty from "../../public/assets/images/empty.png";
 import ProductInCart from "../sections/ProductInCart";
 import CartModal from "./CartModal";
 import { CustomerInfo } from "../../types/cart";
-import Link from "next/link";
+import PopUpBox from "./CartPayment";
 
 interface CartDrawerProps {
   arrivedTimeRange: string;
@@ -120,6 +120,16 @@ export default function CartDrawer({
   const handleClick = ()  => {
     cartContext.onOpen();
     isCartDisable = !isCartDisable;
+  };
+
+  const [isPopUpBoxOpen, setIsPopUpBoxOpen] = useState(false);
+
+  const togglePopUpBox = () => {
+    setIsPopUpBoxOpen((prevState) => !prevState);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopUpBoxOpen(false);
   };
 
   return (
@@ -246,21 +256,21 @@ export default function CartDrawer({
                   <Flex paddingTop="1rem">
                     <CartModal arrivedTimeRange={arrivedTimeRange}>
                       <Button
-                        as={Link}
-                        href={cartPrepareUrl}
                         height={"3rem"}
                         variant="outline"
                         color={"light"}
                         backgroundColor="primary.main"
                         colorScheme={"primary.main"}
-                        // onClick={cartContext.onOpen}
+                        onClick={togglePopUpBox}
                         fontSize="2xl"
                         w="100%"
                       >
                         Đặt ngay!
                       </Button>
+                      
                     </CartModal>
                   </Flex>
+                  
                 </>
               ) : (
                 <>
@@ -272,6 +282,7 @@ export default function CartDrawer({
           )}
         </DrawerContent>
       </Drawer>
+      <PopUpBox isOpen={isPopUpBoxOpen} onClose={handleClosePopup}/>
     </Box>
   );
 }
