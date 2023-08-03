@@ -49,6 +49,7 @@ const Links = [
   { name: "Trang chủ", href: "/" },
   { name: "Cửa Hàng", href: "/shop" },
   { name: "Blog", href: "/blog" },
+  { name: "Order", href: "/order" },
   { name: "Admin", href: "/admin" },
 ];
 
@@ -189,6 +190,7 @@ export default function Action(props) {
   const { user, loading } = useAuthContext();
   const toast = useToast();
   const { accessToken, user: currentUser } = useUserContext();
+  console.log("🚀 ~ file: nav.jsx:192 ~ Action ~ accessToken:", accessToken)
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
