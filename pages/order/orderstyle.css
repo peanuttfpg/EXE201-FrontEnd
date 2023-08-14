@@ -283,7 +283,13 @@
     padding: 0 20px;
     border-radius: 50px;
 }
-
+.btn-upsta{
+    font-weight: 500;
+    color: #fff;
+    background: #fe7f5c;
+    padding: 10px;
+    border-radius: 10px;
+}
 .pagination li.active,
 .pagination ul li.numb:hover,
 .pagination ul li:first-child:hover,

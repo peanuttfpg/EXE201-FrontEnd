@@ -2,28 +2,51 @@ import AuthCheck from "../../components/authentication/AuthCheck";
 import BlogList from "../../components/blogList";
 import Action from "../../components/nav";
 import { Box } from "@chakra-ui/react";
-import data from "./orderdata.json";
+// import data from "./orderdata.json";
 import "./orderstyle.css";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import useUserContext from "../../hooks/useUserContext";
+import axios from "axios";
 function Order() {
     const [page, setPage] = useState(0);
+    const [range, setRange] = useState(0);
+    const [data, setData] = useState(null);
+    const { accessToken } = useUserContext();
+      useEffect(() => {
+        const getAllOrder = async () => {
+          axios({
+            method: "GET",
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/order/getAll?page=${page}&size=10`,
+            headers: {
+              authorization: "Bearer " + accessToken,
+            },
+          })
+            .then((res) => {
+              setData(res.data.content);
+              setRange(res.data.totalPages);
+            })
+            .catch((err) => {});
+        };
+        accessToken && getAllOrder();
+        // eslint-disable-next-line
+      }, [page]);
   let pattern = null;
   switch (true) {
-    case 4 < 7:
-      pattern = [...new Array(4)].map((_, i) => i + 1);
+    case range < 7:
+      pattern = [...new Array(range)].map((_, i) => i + 1);
       break;
     case page < 4:
-      pattern = [1, 2, 3, 4, 5, "...", 4];
+      pattern = [1, 2, 3, 4, 5, "...", range];
       break;
-    case page > 4 - 4:
-      pattern = [1, "...", 4 - 4, 4 - 3, 4 - 2, 4 - 1, 4];
+    case page > range - 4:
+      pattern = [1, "...", range - 4, range - 3, range - 2, range - 1, range];
       break;
     default:
-      pattern = [1, "...", page - 1, page, page + 1, "...", 4];
+      pattern = [1, "...", page - 1, page, page + 1, "...", range];
   }
 
   function changeNumber(n) {
-    if (typeof n === "number" && n > 0 && n <= 4) {
+    if (typeof n === "number" && n > 0 && n <= range) {
       setPage(n);
     }
   }
@@ -46,9 +69,10 @@ function Order() {
                       <th style={{ borderRadius: "30px 0 0 30px" }}>Name</th>
                       <th>Date</th>
                       <th>Money</th>
-                      <th>Products</th>
+                      <th>paymentMethod</th>
+                      <th>Status</th>
                       <th style={{ borderRadius: "0px 30px 30px 0px" }}>
-                        Status
+                        Action
                       </th>
                       {/* <th style={{ width: 120, borderRadius: "0px 30px 30px 0px" }}>
             Delete
@@ -60,29 +84,34 @@ function Order() {
                       <>
                         {data.length > 0 ? (
                           <>
-                            {data
-                              .slice(0 + page, 6 + page)
-                              .map((houses, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <th>
-                                      <p>{houses.Name}</p>
-                                    </th>
-                                    <th>
-                                      <p>{houses.Date}</p>
-                                    </th>
-                                    <th>
-                                      <p>{houses.Money}</p>
-                                    </th>
-                                    <th>
-                                      <p>{houses.Products[0]}</p>
-                                    </th>
-                                    <th>
-                                      <p>{houses.Status}</p>
-                                    </th>
-                                  </tr>
-                                );
-                              })}
+                            {data.map((houses, index) => {
+                              return (
+                                <tr key={index}>
+                                  <th>
+                                    <p>{houses.user.name}</p>
+                                  </th>
+                                  <th>
+                                    <p>{houses.orderDate}</p>
+                                  </th>
+                                  <th>
+                                    <p>{houses.totalPrice} VND</p>
+                                  </th>
+                                  <th>
+                                    <p>{houses.paymentMethod}</p>
+                                  </th>
+                                  <th>
+                                    <p>
+                                      {houses.orderType === "Pending"
+                                        ? "processing "
+                                        : houses.orderType}
+                                    </p>
+                                  </th>
+                                  <th>
+                                    <button className="btn-upsta">Update Status</button>
+                                  </th>
+                                </tr>
+                              );
+                            })}
                           </>
                         ) : (
                           "trống trơn"

@@ -33,7 +33,7 @@ import ProductInCart from "../sections/ProductInCart";
 import CartModal from "./CartModal";
 import { CustomerInfo } from "../../types/cart";
 import PopUpBox from "./CartPayment";
-
+import axios from "axios";
 interface CartDrawerProps {
   arrivedTimeRange: string;
   isCartDisable: boolean;
@@ -46,6 +46,7 @@ export default function CartDrawer({
   const toast = useToast();
   const cartContext = useCartContext();
   const currentCart = cartContext.cart;
+  console.log("🚀 ~ file: CartDrawer.tsx:49 ~ currentCart:", currentCart)
   const [totalCartItems, setTotalCartItems] = useState<number>(0);
   const totalCurrentCart = currentCart?.items.length;
   const [totalAmount, setTotalAmount] = useState(0);
@@ -55,19 +56,18 @@ export default function CartDrawer({
     setTotalAmount(0);
     currentCart?.items?.forEach((item) => {
       setTotalAmount(totalAmount + item.product.price);
-    }
-    )
+    });
   }, [currentCart]);
 
-  const {authorize} = useAuthorize();
-  const { user: FbUser, loading} = useAuthContext();
+  const { authorize } = useAuthorize();
+  const { user: FbUser, loading } = useAuthContext();
   const { accessToken, user: currentUser } = useUserContext();
-  const [ bearerToken, setBearerToken] = useState("");
+  const [bearerToken, setBearerToken] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const res = await authorize(await FbUser.getIdToken()!);
-      if(res.status === 200){
-        console.log("Authorized TOKEN :",res.data?.accessToken);
+      if (res.status === 200) {
+        console.log("Authorized TOKEN :", res.data?.accessToken);
         setBearerToken(res.data?.accessToken);
       }
     };
@@ -78,16 +78,16 @@ export default function CartDrawer({
   useEffect(() => {
     const FetchData = async () => {
       const res = await useCartPrice(
-        mapCartModelToOrderRequest(currentCart),bearerToken
+        mapCartModelToOrderRequest(currentCart),
+        bearerToken
       );
-      console.log("Prepared Card :",res);
+      console.log("Prepared Card :", res);
       setCartPrepareUrl(res?.url);
       console.log(cartPrepareUrl);
     };
     FetchData();
-  return () => {};
-}, [currentCart,bearerToken]);
-
+    return () => {};
+  }, [currentCart, bearerToken]);
 
   useEffect(() => {
     setTotalCartItems(totalCurrentCart);
@@ -117,7 +117,7 @@ export default function CartDrawer({
     }
   };
 
-  const handleClick = ()  => {
+  const handleClick = () => {
     cartContext.onOpen();
     isCartDisable = !isCartDisable;
   };
@@ -125,7 +125,29 @@ export default function CartDrawer({
   const [isPopUpBoxOpen, setIsPopUpBoxOpen] = useState(false);
 
   const togglePopUpBox = () => {
-    setIsPopUpBoxOpen((prevState) => !prevState);
+    let cartRequests=[];
+    for (var i = 0; i < currentCart.items.length; i++) {
+      cartRequests.push({
+        productId: currentCart.items[i].product.id,
+        quantity: currentCart.items[i].quantity,
+      });
+    }
+    axios({
+      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/order/createOrder`,
+      headers: {
+        authorization: "Bearer " + accessToken,
+      },
+      data: {
+        address: currentUser?.address || "string",
+        cartRequests,
+        paymentMethod: currentUser?.paymentMethod || "Vietcombank",
+      },
+    })
+      .then((res) => {
+        setIsPopUpBoxOpen((prevState) => !prevState);
+      })
+      .catch((err) => {});
   };
 
   const handleClosePopup = () => {
@@ -134,14 +156,14 @@ export default function CartDrawer({
 
   return (
     <Box>
-      <Box 
-        height={"3rem"} 
-        onClick={ handleClick }
+      <Box
+        height={"3rem"}
+        onClick={handleClick}
         position={"absolute"}
-        right={"18rem"}>
+        right={"18rem"}
+      >
         <IconButton
           disabled={isCartDisable}
-          
           variant="outline"
           colorScheme="dark"
           aria-label="Giỏ hàng"
@@ -221,7 +243,7 @@ export default function CartDrawer({
               justifyContent={"space-between"}
               padding="1rem"
             >
-              {totalAmount>0 ? ( 
+              {totalAmount > 0 ? (
                 <>
                   <Flex
                     height={"auto"}
@@ -235,9 +257,7 @@ export default function CartDrawer({
                     <Box>
                       <Flex justifyContent="space-between" fontSize={"xl"}>
                         <Text>{"Tạm tính:"}</Text>
-                        <Text>
-                          {totalAmount} VND
-                        </Text>
+                        <Text>{totalAmount} VND</Text>
                       </Flex>
                     </Box>
                     <Divider />
@@ -247,9 +267,7 @@ export default function CartDrawer({
                       fontWeight="bold"
                     >
                       <Text>{"Tổng cộng:"}</Text>
-                      <Text>
-                        {totalAmount} VND
-                      </Text>
+                      <Text>{totalAmount} VND</Text>
                     </Flex>
                   </Flex>
                   {/*  Check out */}
@@ -267,10 +285,8 @@ export default function CartDrawer({
                       >
                         Đặt ngay!
                       </Button>
-                      
                     </CartModal>
                   </Flex>
-                  
                 </>
               ) : (
                 <>
@@ -282,7 +298,7 @@ export default function CartDrawer({
           )}
         </DrawerContent>
       </Drawer>
-      <PopUpBox isOpen={isPopUpBoxOpen} onClose={handleClosePopup}/>
+      <PopUpBox isOpen={isPopUpBoxOpen} onClose={handleClosePopup} />
     </Box>
   );
 }
