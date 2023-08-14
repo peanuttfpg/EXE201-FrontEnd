@@ -14,14 +14,17 @@ function Order() {
     const { accessToken } = useUserContext();
       useEffect(() => {
         const getAllOrder = async () => {
-          axios({
-            method: "GET",
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/order/getAll?page=${page}&size=10`,
-            headers: {
-              authorization: "Bearer " + accessToken,
-            },
-          })
+          axios.create({
+            baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+          }).get('/order/getAll',{
+            page: page,
+            headers : {
+              Authorization : 'Bearer ' + accessToken
+              }
+            }
+          )
             .then((res) => {
+              console.log(res.data.content);
               setData(res.data.content);
               setRange(res.data.totalPages);
             })
@@ -47,7 +50,9 @@ function Order() {
 
   function changeNumber(n) {
     if (typeof n === "number" && n > 0 && n <= range) {
+      console.log("Page selected : " + n);
       setPage(n);
+      console.log("Page : " + page);
     }
   }
   return (

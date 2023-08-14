@@ -240,7 +240,7 @@
     transition: all 0.3s ease;
 }
 
-.pagination ul li span {
+.pagination ul li span button{
     display: flex;
     align-items: center;
     justify-content: center;

@@ -8,17 +8,23 @@ const PopUpBox = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const timer = setTimeout(() => {
-        setShowSuccess(true);
-      }, 5000);
-
+      
+        const timer = setTimeout(() => {
+          if(showSuccess) {
+            setShowSuccess(true);
+          } else {
+          isOpen = false;
+          }
+        }, 5000);
+      
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+    }
+  , [isOpen]);
 
   const handleClose = () => {
     setShowSuccess(false);
-    onClose();
+    isOpen = false;
   };
 
   return (
@@ -84,7 +90,7 @@ const PopUpBox = ({ isOpen, onClose }) => {
           variant="outline" 
           colorScheme="blue" 
           mt={"5rem"}
-          onClick={() => { handleClose; window.location.reload();}}>
+          onClick={() => { handleClose;}}>
             
             Close
         </Button>

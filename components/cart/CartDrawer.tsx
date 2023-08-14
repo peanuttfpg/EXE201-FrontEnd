@@ -152,6 +152,7 @@ export default function CartDrawer({
 
   const handleClosePopup = () => {
     setIsPopUpBoxOpen(false);
+    cartContext.SetNewCart(null);
   };
 
   return (
