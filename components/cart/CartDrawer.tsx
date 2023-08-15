@@ -34,6 +34,7 @@ import CartModal from "./CartModal";
 import { CustomerInfo } from "../../types/cart";
 import PopUpBox from "./CartPayment";
 import axios from "axios";
+import { Cart } from "../../types/cart";
 interface CartDrawerProps {
   arrivedTimeRange: string;
   isCartDisable: boolean;
@@ -85,9 +86,11 @@ export default function CartDrawer({
       setCartPrepareUrl(res?.url);
       console.log(cartPrepareUrl);
     };
-    FetchData();
+    if(totalAmount>0){
+      FetchData();
+    }
     return () => {};
-  }, [currentCart, bearerToken]);
+  }, [currentCart,totalAmount, bearerToken]);
 
   useEffect(() => {
     setTotalCartItems(totalCurrentCart);
@@ -145,14 +148,19 @@ export default function CartDrawer({
       },
     })
       .then((res) => {
-        setIsPopUpBoxOpen((prevState) => !prevState);
+        setIsPopUpBoxOpen(true);
       })
       .catch((err) => {});
   };
 
   const handleClosePopup = () => {
     setIsPopUpBoxOpen(false);
-    cartContext.SetNewCart(null);
+    const newCart : Cart = {
+      items: [],
+      totalItem: 0,
+      total: 0,
+    };
+    cartContext.SetNewCart(newCart);
   };
 
   return (
@@ -299,7 +307,9 @@ export default function CartDrawer({
           )}
         </DrawerContent>
       </Drawer>
-      <PopUpBox isOpen={isPopUpBoxOpen} onClose={handleClosePopup} />
+      <Box hidden={!isPopUpBoxOpen}>
+        <PopUpBox onClose={handleClosePopup} />
+      </Box>
     </Box>
   );
 }

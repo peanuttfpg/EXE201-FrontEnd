@@ -190,7 +190,6 @@ export default function Action(props) {
   const { user, loading } = useAuthContext();
   const toast = useToast();
   const { accessToken, user: currentUser } = useUserContext();
-  console.log("🚀 ~ file: nav.jsx:192 ~ Action ~ accessToken:", accessToken)
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

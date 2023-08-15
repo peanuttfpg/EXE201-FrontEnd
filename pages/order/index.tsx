@@ -7,32 +7,51 @@ import "./orderstyle.css";
 import { useState,useEffect } from "react";
 import useUserContext from "../../hooks/useUserContext";
 import axios from "axios";
+import { request } from "../../api/util";
+import useAuthContext from "../../hooks/useAuthContext";
+import useAuthorize from "@/hooks/auth/useAuth";
+
 function Order() {
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [range, setRange] = useState(0);
     const [data, setData] = useState(null);
-    const { accessToken } = useUserContext();
-      useEffect(() => {
+    const { accessToken, user:currentUser } = useUserContext();
+    const {user:FbUser} = useAuthContext();
+    const { authorize } = useAuthorize();
+    const [bearerToken, setBearerToken] = useState("");
+
+    useEffect(() => { 
+      const fetchData = async () => {
+        if(FbUser){
+        const res = await authorize(await FbUser.getIdToken());
+        if (res.status === 200) {
+          console.log("Authorized TOKEN :", res.data?.accessToken);
+          setBearerToken(res.data?.accessToken);
+        }
+      }
+      };
+      fetchData();
+      return () => {};
+    }, []);
+
+    useEffect(() => {
         const getAllOrder = async () => {
-          axios.create({
-            baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-          }).get('/order/getAll',{
-            page: page,
+          request.get('/order/getAll',{
             headers : {
               Authorization : 'Bearer ' + accessToken
               }
             }
           )
             .then((res) => {
-              console.log(res.data.content);
+              console.log("Orders :" + res.data.content);
               setData(res.data.content);
               setRange(res.data.totalPages);
             })
             .catch((err) => {});
         };
-        accessToken && getAllOrder();
-        // eslint-disable-next-line
-      }, [page]);
+        getAllOrder();
+        return () => {};
+    }, [accessToken]);
   let pattern = null;
   switch (true) {
     case range < 7:

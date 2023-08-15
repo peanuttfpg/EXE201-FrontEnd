@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Image, Text, useToast } from "@chakra-ui/react";
 import Momo from "../../public/assets/images/Momo.png";
 
-const PopUpBox = ({ isOpen, onClose }) => {
+const PopUpBox = ({ onClose }) => {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isOpen, setOpen] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
     if (isOpen) {
       
         const timer = setTimeout(() => {
-          if(showSuccess) {
+          if(!showSuccess) {
             setShowSuccess(true);
           } else {
-          isOpen = false;
+            setOpen(false);
+            onClose();
           }
         }, 5000);
       
@@ -23,11 +25,13 @@ const PopUpBox = ({ isOpen, onClose }) => {
   , [isOpen]);
 
   const handleClose = () => {
-    setShowSuccess(false);
-    isOpen = false;
+    setOpen(false);
+    onClose();
   };
 
   return (
+  <>
+    {isOpen && (
     <Box
       pos="fixed"
       top={0}
@@ -66,7 +70,8 @@ const PopUpBox = ({ isOpen, onClose }) => {
         width="200px"
         height="200px"
       >
-        {toast({
+        {(isOpen && (showSuccess == true)) && 
+        toast({
           title: "Thanh toán đơn hàng thành công!",
           status: "success",
           position: "top-right",
@@ -90,7 +95,7 @@ const PopUpBox = ({ isOpen, onClose }) => {
           variant="outline" 
           colorScheme="blue" 
           mt={"5rem"}
-          onClick={() => { handleClose;}}>
+          onClick={ handleClose}>
             
             Close
         </Button>
@@ -106,7 +111,9 @@ const PopUpBox = ({ isOpen, onClose }) => {
       />
       )}
     </Box>
-  </Box>
+  </Box>)
+}
+</>
   );
 };
 
